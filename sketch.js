@@ -2,7 +2,6 @@ var cols, rows;
 var w = 20;
 var grid = [];
 var stack = [];
-
 var current;
 
 function setup() {
