@@ -1,6 +1,7 @@
 var cols, rows;
-var w = 40;
+var w = 20;
 var grid = [];
+var stack = [];
 
 var current;
 
@@ -15,7 +16,7 @@ function setup() {
     }
   }
   current = grid[0];
-  frameRate(5);
+  // frameRate(5);
 }
 
 function draw() {
@@ -23,11 +24,17 @@ function draw() {
   for (var i = 0; i < grid.length; i++){
     grid[i].show();
   }
-  current.visited = true;
   var next = current.checkNeighbors();
+  current.visited = true;
+  current.highlight();
+
   if (next) {
     next.visited = true;
+    stack.push(current);
+    removeWalls(current, next);
     current = next;
+  } else if (stack.length > 0) {
+    current = stack.pop();
   }
 }
 
@@ -43,6 +50,14 @@ function Cell(i, j) {
   this.j = j;
   this.walls = [true, true, true, true];
   this.visited = false;
+
+  this.highlight = function() {
+    var x = this.i*w;
+    var y = this.j*w;
+    noStroke();
+    fill(50, 50, 255, 100);
+    rect(x, y, w, w);
+  }
 
   this.checkNeighbors = () => {
     var neighbors = [];
@@ -84,8 +99,28 @@ function Cell(i, j) {
     }
 
     if (this.visited) {
+      noStroke();
       fill(255, 0, 255, 100);
       rect(x, y, w, w);
     }
+  }
+}
+
+function removeWalls(a, b){
+  var x = a.i - b.i;
+  var y = a.j - b.j;
+  if (x === 1){
+    a.walls[3] = false;
+    b.walls[1] = false;
+  } else if (x === -1) {
+    a.walls[1] = false;
+    b.walls[3] = false;
+  }
+  if (y === 1){
+    a.walls[0] = false;
+    b.walls[2] = false;
+  } else if (y === -1) {
+    a.walls[2] = false;
+    b.walls[0] = false;
   }
 }
