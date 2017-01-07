@@ -28,7 +28,12 @@ function Cell(i, j) {
     var x = this.i*w;
     var y = this.j*w;
     stroke(255);
-    noFill();
-    rect(x, y, w, w);
+
+    line(x, y, x+w, y); // top
+    line(x+w, y, x+w, y+w); // right
+    line(x+w, y+w, x, y+w); // bottom
+    line(x+w, y+w, x, y); // left
+    // noFill();
+    // rect(x, y, w, w);
   }
 }
